@@ -10,6 +10,8 @@ import Home from '../screen/Home';
 import Detail from '../screen/Detail';
 
 import Profile from '../screen/Profile';
+import Booking from '../screen/Booking';
+import Wishlist from '../screen/Wishlist';
 
 function MenuNavigator() {
   return (
@@ -17,8 +19,8 @@ function MenuNavigator() {
     <Drawer.Navigator>
       <Drawer.Screen name="Home" component={Home} />
       <Drawer.Screen name="Profile" component={Profile} />
-      {/* MY BOOKING */}
-      {/* MY WISHLIST */}
+      <Drawer.Screen name="Booking" component={Booking} />
+      <Drawer.Screen name="Wishlist" component={Wishlist} />
     </Drawer.Navigator>
   );
 }
