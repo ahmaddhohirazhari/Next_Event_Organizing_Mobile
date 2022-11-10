@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, StyleSheet, Image} from 'react-native';
+import splashImage from '../../assets/Splash.png';
 
 export default function SplashScreen(props) {
   console.log(props);
@@ -15,12 +17,12 @@ export default function SplashScreen(props) {
       } else {
         props.navigation.replace('AuthScreen');
       }
-    }, 1000);
+    }, 2000);
   };
 
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Splash Screen</Text>
+      <Image source={splashImage} style={{width: '100%'}} />
     </View>
   );
 }
