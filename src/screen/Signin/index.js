@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-undef */
 import React from 'react';
 import {
@@ -18,9 +19,17 @@ export default function Signin(props) {
     props.navigation.replace('AppScreen', {screen: 'MenuNavigator'});
   };
 
+  const navigateSignup = () => {
+    props.navigation.replace('AuthScreen', {screen: 'Signup'});
+  };
+  const navigateForgotPassword = () => {
+    props.navigation.replace('AuthScreen', {screen: 'ForgotPassword'});
+  };
   return (
     <View style={{backgroundColor: 'white', height: '100%'}}>
-      <Image source={Logo} style={{width: '50%', margin: 12}} />
+      <TouchableOpacity onPress={navigateSignup}>
+        <Image source={Logo} style={{width: '50%', margin: 12}} />
+      </TouchableOpacity>
       <Text style={{fontSize: 30, margin: 12, color: '#373A42'}}>Log In</Text>
       <Text style={{fontSize: 15, margin: 12, color: '#373A42'}}>
         Hi, Welcome back to Urticket!
@@ -39,7 +48,7 @@ export default function Signin(props) {
         placeholderTextColor={'rgba(160, 163, 189, 1)'}
         onChangeText={text => handleChangeForm(text, 'password')}
       />
-      <TouchableOpacity onPress={handleLogin}>
+      <TouchableOpacity onPress={navigateForgotPassword}>
         <Text style={{textAlign: 'right', color: 'blue', margin: 12}}>
           Forgot Password?
         </Text>
