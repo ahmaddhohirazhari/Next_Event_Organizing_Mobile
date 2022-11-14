@@ -1,11 +1,19 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {ScrollView, Text, StyleSheet, Button} from 'react-native';
+import HeaderDetail from '../../component/Header/detail.js';
 
-export default function Detail() {
+export default function Detail(props) {
   return (
-    <View>
-      <Text>Detail Screen</Text>
-    </View>
+    <ScrollView>
+      <HeaderDetail {...props} />
+      <Button
+        title="Order Screen"
+        onPress={() => {
+          props.navigation.navigate('Order');
+        }}
+      />
+      {/* <Text style={{fontSize: 300}}>Lorem ipsum dolor ammet</Text> */}
+    </ScrollView>
   );
 }
 

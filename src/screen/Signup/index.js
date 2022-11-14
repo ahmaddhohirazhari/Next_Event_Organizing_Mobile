@@ -2,6 +2,7 @@
 /* eslint-disable no-undef */
 import React from 'react';
 import {
+  ScrollView,
   View,
   Text,
   StyleSheet,
@@ -9,26 +10,35 @@ import {
   TouchableOpacity,
   Image,
 } from 'react-native';
-import CheckBox from '@react-native-community/checkbox';
+import {Checkbox} from 'react-native-paper';
 import Logo from '../../assets/logo.png';
 
 export default function Signup(props) {
+  const [checked, setChecked] = React.useState(false);
   const navigateLogin = () => {
     props.navigation.replace('AuthScreen', {screen: 'Signin'});
   };
 
   return (
-    <View style={{backgroundColor: 'white', height: '100%'}}>
+    <ScrollView style={{backgroundColor: 'white', height: '100%'}}>
       <Image source={Logo} style={{width: '50%', margin: 12}} />
-      <Text style={{fontSize: 30, margin: 12, color: '#373A42'}}>Sign Up</Text>
-      <View style={{display: 'flex', flexDirection: 'row', margin: 12}}>
+      <Text
+        style={{
+          fontSize: 30,
+          margin: 12,
+          color: '#373A42',
+          fontFamily: 'Poppins-Bold',
+        }}>
+        Sign Up
+      </Text>
+      <ScrollView style={{display: 'flex', flexDirection: 'row', margin: 12}}>
         <Text style={{fontSize: 15, color: '#373A42'}}>
           Already have an account?
         </Text>
         <TouchableOpacity onPress={navigateLogin}>
           <Text style={{fontSize: 15, color: 'blue'}}>Log In</Text>
         </TouchableOpacity>
-      </View>
+      </ScrollView>
 
       <TextInput
         style={styles.input}
@@ -58,14 +68,15 @@ export default function Signup(props) {
       />
       <View
         style={{
-          flexDirection: 'row',
           alignItems: 'center',
+          flexDirection: 'row',
           margin: 12,
         }}>
-        <CheckBox
-          disabled={false}
-          value={false}
-          onValueChange={newValue => setToggleCheckBox(newValue)}
+        <Checkbox
+          status={checked ? 'checked' : 'unchecked'}
+          onPress={() => {
+            setChecked(!checked);
+          }}
         />
         <Text>Accept term and condition</Text>
       </View>
@@ -73,7 +84,7 @@ export default function Signup(props) {
       <TouchableOpacity style={styles.login}>
         <Text style={{textAlign: 'center', color: 'white'}}>Sign Up</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 

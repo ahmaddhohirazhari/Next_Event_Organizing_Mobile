@@ -9,4 +9,4 @@ export default function Profile(props) {
   );
 }
 
-const style = StyleSheet.create({});
+const styles = StyleSheet.create({});
