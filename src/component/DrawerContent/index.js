@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {
   DrawerContentScrollView,
@@ -7,12 +7,14 @@ import {
 } from '@react-navigation/drawer';
 
 import Icon from 'react-native-vector-icons/Feather';
+import axios from '../../utils/axios';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function DrawerContent(props) {
   const handleLogout = async () => {
     try {
+      await axios.post('/auth/logout');
       alert('Logout');
       await AsyncStorage.clear();
       props.navigation.replace('AuthScreen', {

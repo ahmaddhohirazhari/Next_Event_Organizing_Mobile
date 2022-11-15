@@ -1,6 +1,7 @@
+/* eslint-disable eslint-comments/no-unused-disable */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-undef */
-import React from 'react';
+import React, {useState} from 'react';
 import {
   ScrollView,
   View,
@@ -12,9 +13,26 @@ import {
 } from 'react-native';
 import {Checkbox} from 'react-native-paper';
 import Logo from '../../assets/logo.png';
+import axios from '../../utils/axios';
 
 export default function Signup(props) {
   const [checked, setChecked] = React.useState(false);
+  const [form, setForm] = useState({});
+  const handSignUp = async () => {
+    try {
+      console.log(form);
+      const result = await axios.post('/auth/register', form);
+      alert(result.data.msg);
+      props.navigation.replace('AuthScreen', {screen: 'Signin'});
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
+  const handleChangeForm = (value, name) => {
+    setForm({...form, [name]: value});
+  };
+
   const navigateLogin = () => {
     props.navigation.replace('AuthScreen', {screen: 'Signin'});
   };
@@ -40,12 +58,12 @@ export default function Signup(props) {
         </TouchableOpacity>
       </ScrollView>
 
-      <TextInput
+      {/* <TextInput
         style={styles.input}
         placeholderTextColor={'rgba(160, 163, 189, 1)'}
         placeholder="Input FUll Name"
         onChangeText={text => handleChangeForm(text, 'name')}
-      />
+      /> */}
       <TextInput
         style={styles.input}
         placeholderTextColor={'rgba(160, 163, 189, 1)'}
@@ -64,7 +82,7 @@ export default function Signup(props) {
         secureTextEntry={true}
         placeholder="Confirm Password"
         placeholderTextColor={'rgba(160, 163, 189, 1)'}
-        onChangeText={text => handleChangeForm(text, 'confirPassword')}
+        onChangeText={text => handleChangeForm(text, 'confirmPassword')}
       />
       <View
         style={{
@@ -81,7 +99,7 @@ export default function Signup(props) {
         <Text>Accept term and condition</Text>
       </View>
 
-      <TouchableOpacity style={styles.login}>
+      <TouchableOpacity style={styles.login} onPress={handSignUp}>
         <Text style={{textAlign: 'center', color: 'white'}}>Sign Up</Text>
       </TouchableOpacity>
     </ScrollView>

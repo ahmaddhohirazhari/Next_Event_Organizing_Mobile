@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable no-undef */
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -13,10 +13,27 @@ import Logo from '../../assets/logo.png';
 import IconFb from '../../assets/btnFacebook.png';
 import IconGoogle from '../../assets/btnGoogle.png';
 import IconBio from '../../assets/btnBio.png';
+import axios from '../../utils/axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Signin(props) {
-  const handleLogin = () => {
-    props.navigation.replace('AppScreen', {screen: 'MenuNavigator'});
+  const [form, setForm] = useState({});
+  const handleLogin = async () => {
+    try {
+      console.log(form);
+      const result = await axios.post('/auth/login', form);
+      await AsyncStorage.setItem('userId', result.data.data.userId);
+      await AsyncStorage.setItem('token', result.data.data.token);
+      await AsyncStorage.setItem('refreshToken', result.data.data.refreshToken);
+      alert(result.data.msg);
+      props.navigation.replace('AppScreen', {screen: 'MenuNavigator'});
+    } catch (error) {
+      console.log(error.response.data);
+    }
+  };
+
+  const handleChangeForm = (value, name) => {
+    setForm({...form, [name]: value});
   };
 
   const navigateSignup = () => {

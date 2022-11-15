@@ -1,4 +1,5 @@
-import React from 'react';
+/* eslint-disable react-native/no-inline-styles */
+import React, {useEffect, useState} from 'react';
 import {
   TextInput,
   View,
@@ -7,10 +8,35 @@ import {
   ScrollView,
   Image,
   TouchableOpacity,
+  FlatList,
+  Button,
 } from 'react-native';
 import IconSearch from 'react-native-vector-icons/AntDesign';
+import axios from '../../utils/axios';
+import defaultImage from '../../assets/event.png';
 
 export default function Home(props) {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+  const getData = async () => {
+    try {
+      const result = await axios.get(
+        '/event?page=&searchName=&searchDateShow=&sort=&limit=50',
+      );
+      setData(result.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDetail = eventId => {
+    props.navigation.navigate('Detail', {eventId: eventId});
+  };
+
   const navDetail = () => props.navigation.navigate('Detail');
   return (
     <ScrollView>
@@ -77,51 +103,40 @@ export default function Home(props) {
             <Image source={require('../../assets/filter.png')} />
           </View>
         </View>
-        <ScrollView
+        <FlatList
           horizontal={true}
-          style={{
-            backgroundColor: '#FCFCFC',
-          }}>
-          <View style={styles.card}>
-            <Image
-              source={require('../../assets/event.png')}
-              style={{width: '100%', height: '100%', borderRadius: 30}}
-            />
-            <View style={{position: 'absolute', bottom: 30, left: 25}}>
-              <Text style={{color: 'white'}}>Tanggal</Text>
-              <Text style={{color: 'white'}}>Title</Text>
-              <TouchableOpacity onPress={navDetail}>
-                <Text>GO</Text>
-              </TouchableOpacity>
+          data={data}
+          style={{backgroundColor: 'white'}}
+          renderItem={({item}) => (
+            <View
+              style={styles.card}
+              onPress={() => handleDetail(item.eventId)}>
+              <Image
+                source={
+                  item.image
+                    ? {
+                        uri: `https://res.cloudinary.com/dhohircloud/image/upload/v1663957109/${item.image}`,
+                      }
+                    : defaultImage
+                }
+                style={{width: '100%', height: '100%', borderRadius: 30}}
+              />
+              <View style={{position: 'absolute', bottom: 30, left: 25}}>
+                <Text style={{color: 'white'}}>{item.dateTimeShow}</Text>
+                <Text style={{color: 'white'}}>{item.name}</Text>
+                <TouchableOpacity onPress={() => handleDetail(item.eventId)}>
+                  <Text>GO</Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-          <View style={styles.card}>
-            <Image
-              source={require('../../assets/event.png')}
-              style={{width: '100%', height: '100%', borderRadius: 30}}
-            />
-            <View style={{position: 'absolute', bottom: 30, left: 25}}>
-              <Text style={{color: 'white'}}>Tanggal</Text>
-              <Text style={{color: 'white'}}>Title</Text>
-              <TouchableOpacity onPress={navDetail}>
-                <Text>GO</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-          <View style={styles.card}>
-            <Image
-              source={require('../../assets/event.png')}
-              style={{width: '100%', height: '100%', borderRadius: 30}}
-            />
-            <View style={{position: 'absolute', bottom: 30, left: 25}}>
-              <Text style={{color: 'white'}}>Tanggal</Text>
-              <Text style={{color: 'white'}}>Title</Text>
-              <TouchableOpacity onPress={navDetail}>
-                <Text>GO</Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </ScrollView>
+          )}
+          keyExtractor={item => item.eventId}
+        />
+
+        {/* {data.map((item)=>(
+      ))} */}
+
+        <Button title="Detail Screen" onPress={navDetail} />
       </View>
     </ScrollView>
   );
