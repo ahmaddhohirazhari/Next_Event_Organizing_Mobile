@@ -1,5 +1,7 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import IconBack from 'react-native-vector-icons/Ionicons';
 
 export default function DefaultHeader(props) {
   const backScreen = () => {
@@ -9,10 +11,10 @@ export default function DefaultHeader(props) {
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={backScreen} style={styles.section}>
-        <Text>BACK</Text>
+        <IconBack name="arrow-back" color="black" size={30} />
       </TouchableOpacity>
       <View style={(styles.section, styles.sectionCenter)}>
-        <Text>{props.name}</Text>
+        <Text style={{fontFamily: 'Poppins-Bold'}}>{props.name}</Text>
       </View>
       <View style={styles.section} />
     </View>
@@ -25,6 +27,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     paddingVertical: 15,
+    backgroundColor: 'white',
   },
   section: {
     flex: 1,

@@ -11,7 +11,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import HeaderDetail from '../../component/Header/detail.js';
-import defaultImage from '../../assets/event.png';
 import axios from '../../utils/axios';
 
 export default function Detail(props) {

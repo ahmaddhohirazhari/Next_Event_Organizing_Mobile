@@ -14,7 +14,7 @@ export default function DetailHeader(props) {
         <IconBack name="arrow-back" color="white" size={30} />
       </TouchableOpacity>
       <TouchableOpacity onPress={backScreen}>
-        <IconBack name="heart" color="white" size={30} />
+        <IconLike name="heart" color="white" size={30} />
       </TouchableOpacity>
     </View>
   );
