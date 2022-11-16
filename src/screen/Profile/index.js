@@ -15,6 +15,7 @@ import axios from '../../utils/axios';
 
 export default function Profile(props) {
   const [data, setData] = useState([]);
+  const [form, setForm] = useState(data[0]);
   const [userId, setUserId] = useState('');
   console.log(data);
   useEffect(() => {
@@ -36,6 +37,18 @@ export default function Profile(props) {
       console.log(error);
     }
   };
+  const handleChangeForm = (value, name) => {
+    setForm({...form, [name]: value});
+  };
+  const handleUpdate = async () => {
+    try {
+      console.log(form);
+      await axios.patch('/user/updateUser', form);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ScrollView
       style={{
@@ -73,6 +86,7 @@ export default function Profile(props) {
           <TextInput
             placeholder="name"
             defaultValue={data[0]?.name}
+            onChangeText={text => handleChangeForm(text, 'name')}
             style={{
               fontSize: 16,
               borderBottomWidth: 1,
@@ -89,6 +103,7 @@ export default function Profile(props) {
           </Text>
           <TextInput
             placeholder="username"
+            onChangeText={text => handleChangeForm(text, 'username')}
             defaultValue={data[0]?.username}
             style={{
               fontSize: 16,
@@ -100,6 +115,7 @@ export default function Profile(props) {
         <View style={{paddingVertical: 10}}>
           <TextInput
             placeholder="Email"
+            onChangeText={text => handleChangeForm(text, 'email')}
             defaultValue={data[0]?.email}
             style={{
               fontSize: 16,
@@ -111,6 +127,7 @@ export default function Profile(props) {
         <View style={{paddingVertical: 10}}>
           <TextInput
             placeholder="Phone Number"
+            onChangeText={text => handleChangeForm(text, 'phoneNumber')}
             defaultValue={data[0]?.phoneNumber}
             style={{
               fontSize: 16,
@@ -128,6 +145,7 @@ export default function Profile(props) {
           </Text>
           <TextInput
             placeholder="accountname"
+            onChangeText={text => handleChangeForm(text, 'gender')}
             defaultValue={data[0]?.gender}
             style={{
               fontSize: 16,
@@ -144,8 +162,9 @@ export default function Profile(props) {
             Profession
           </Text>
           <TextInput
-            placeholder="accountname"
-            defaultValue={'Programmer'}
+            placeholder="profession"
+            onChangeText={text => handleChangeForm(text, 'profession')}
+            defaultValue={data[0]?.profession}
             style={{
               fontSize: 16,
               borderBottomWidth: 1,
@@ -162,6 +181,7 @@ export default function Profile(props) {
           </Text>
           <TextInput
             placeholder="accountname"
+            onChangeText={text => handleChangeForm(text, 'nationality')}
             defaultValue={'Indonesia'}
             style={{
               fontSize: 16,
@@ -178,8 +198,9 @@ export default function Profile(props) {
             Birthday
           </Text>
           <TextInput
-            placeholder="accountname"
-            defaultValue={'Male'}
+            placeholder="BirthDay"
+            defaultValue={data[0]?.dateOfBirth}
+            onChangeText={text => handleChangeForm(Date, 'dateOfBirth')}
             style={{
               fontSize: 16,
               borderBottomWidth: 1,
@@ -189,6 +210,7 @@ export default function Profile(props) {
         </View>
       </View>
       <TouchableOpacity
+        onPress={handleUpdate}
         style={{
           paddingVertical: 20,
           margin: 12,
@@ -201,13 +223,7 @@ export default function Profile(props) {
           shadowRadius: 5,
           elevation: 5,
         }}>
-        <Text
-          style={{textAlign: 'center', color: 'white'}}
-          onPress={() => {
-            props.navigation.navigate('Order');
-          }}>
-          Save Change
-        </Text>
+        <Text style={{textAlign: 'center', color: 'white'}}>Save Change</Text>
       </TouchableOpacity>
     </ScrollView>
   );
