@@ -1,6 +1,8 @@
 module.exports = {
   root: true,
   extends: '@react-native-community',
+  plugins: ['react-hooks'],
+
   rules: {
     'prettier/prettier': [
       'error',
@@ -8,5 +10,7 @@ module.exports = {
         endOfLine: 'auto',
       },
     ],
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
   },
 };

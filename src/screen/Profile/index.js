@@ -43,7 +43,8 @@ export default function Profile(props) {
   const handleUpdate = async () => {
     try {
       console.log(form);
-      await axios.patch('/user/updateUser', form);
+      const result = await axios.patch('/user/updateUser', form);
+      alert(result.data.msg);
     } catch (error) {
       console.log(error);
     }
@@ -113,6 +114,12 @@ export default function Profile(props) {
           />
         </View>
         <View style={{paddingVertical: 10}}>
+          <Text
+            style={{
+              opacity: 0.5,
+            }}>
+            Email
+          </Text>
           <TextInput
             placeholder="Email"
             onChangeText={text => handleChangeForm(text, 'email')}
@@ -125,6 +132,12 @@ export default function Profile(props) {
           />
         </View>
         <View style={{paddingVertical: 10}}>
+          <Text
+            style={{
+              opacity: 0.5,
+            }}>
+            Phone Number
+          </Text>
           <TextInput
             placeholder="Phone Number"
             onChangeText={text => handleChangeForm(text, 'phoneNumber')}
