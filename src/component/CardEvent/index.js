@@ -1,28 +1,42 @@
 import React from 'react';
-import {View, TouchableOpacity, Text, Image} from 'react-native';
+import {FlatList, View, TouchableOpacity, Text, Image} from 'react-native';
 import styles from './styles';
 import defaultImage from '../../assets/event.png';
+import moment from 'moment';
 
 export default function CardEvent(props) {
   return (
-    <View style={styles.card}>
-      <Image
-        source={
-          props.item.image
-            ? {
-                uri: `https://res.cloudinary.com/dhohircloud/image/upload/v1663957109/${props.item.image}`,
-              }
-            : defaultImage
-        }
-        style={styles.image}
-      />
-      <View style={styles.detail}>
-        <Text style={styles.text}>{props.item.dateTimeShow}</Text>
-        <Text style={styles.text}>{props.item.name}</Text>
-        <TouchableOpacity onPress={props.handleDetail}>
-          <Text>GO</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    <FlatList
+      horizontal={true}
+      data={props.data}
+      style={styles.flatlist}
+      renderItem={({item}) => (
+        <View style={styles.card}>
+          <Image
+            source={
+              item.image
+                ? {
+                    uri: `https://res.cloudinary.com/dhohircloud/image/upload/v1663957109/${item.image}`,
+                  }
+                : defaultImage
+            }
+            style={styles.image}
+          />
+          <View style={styles.detail}>
+            <Text style={styles.eventDate}>
+              {moment(item.dateTimeShow).format('ddd MMM Do , h:mm a')}
+            </Text>
+            <Text style={styles.eventName}>{item.name}</Text>
+            <TouchableOpacity
+              onPress={() => {
+                props.handleDetail(item.eventId);
+              }}>
+              <Image source={require('../../assets/detail.png')} />
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
+      keyExtractor={item => item.eventId}
+    />
   );
 }

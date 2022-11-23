@@ -1,243 +1,65 @@
-/* eslint-disable no-shadow */
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable react-native/no-inline-styles */
-import React, {useState, useEffect} from 'react';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  Image,
-  TextInput,
-  ScrollView,
-} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from '../../utils/axios';
+import React from 'react';
+import {View, Text, Image, ScrollView, TouchableOpacity} from 'react-native';
+import styles from './styles';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import {useSelector} from 'react-redux';
+import defaultImage from '../../assets/profileDefault.jpg';
 
 export default function Profile(props) {
-  const [data, setData] = useState([]);
-  const [form, setForm] = useState(data[0]);
-  const [userId, setUserId] = useState('');
-  console.log(data);
-  useEffect(() => {
-    getUserId();
-    getData();
-  }, [userId]);
+  const dataUser = useSelector(state => state.user.data);
 
-  const getUserId = async () => {
-    const data = await AsyncStorage.getItem('userId');
-    setUserId(data);
+  const handleEdit = () => {
+    props.navigation.navigate('Edit Profile');
   };
-  console.log(userId);
-
-  const getData = async () => {
-    try {
-      const result = await axios.get(`/user/${userId}`);
-      setData(result.data.data);
-    } catch (error) {
-      console.log(error);
-    }
+  const handleChangePw = () => {
+    props.navigation.navigate('Change Password');
   };
-  const handleChangeForm = (value, name) => {
-    setForm({...form, [name]: value});
-  };
-  const handleUpdate = async () => {
-    try {
-      console.log(form);
-      const result = await axios.patch('/user/updateUser', form);
-      alert(result.data.msg);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   return (
-    <ScrollView
-      style={{
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'white',
-        border: 2,
-      }}>
-      <View style={{padding: 20, alignItems: 'center'}}>
-        <Image
-          source={require('../../assets/event.png')}
-          style={{
-            width: 80,
-            height: 80,
-            borderRadius: 100,
-            borderColor: '#3366FF',
-            borderWidth: 4,
-          }}
-        />
-        <Text
-          style={{
-            color: '#3493D9',
-          }}>
-          Change profile photo
-        </Text>
-      </View>
-      <View style={{padding: 10}}>
-        <View>
-          <Text
-            style={{
-              opacity: 0.5,
-            }}>
-            Name
-          </Text>
-          <TextInput
-            placeholder="name"
-            defaultValue={data[0]?.name}
-            onChangeText={text => handleChangeForm(text, 'name')}
-            style={{
-              fontSize: 16,
-              borderBottomWidth: 1,
-              borderColor: '#CDCDCD',
-            }}
+    <>
+      <ScrollView style={styles.profile}>
+        <View style={styles.profileBg}>
+          <Image
+            source={
+              dataUser.image
+                ? {
+                    uri: `https://res.cloudinary.com/dhohircloud/image/upload/v1663957109/${dataUser.image}`,
+                  }
+                : defaultImage
+            }
+            style={styles.photo}
           />
-        </View>
-        <View style={{paddingVertical: 10}}>
+          <Text style={styles.profileName}>{dataUser.name}</Text>
           <Text
-            style={{
-              opacity: 0.5,
-            }}>
-            Username
-          </Text>
-          <TextInput
-            placeholder="username"
-            onChangeText={text => handleChangeForm(text, 'username')}
-            defaultValue={data[0]?.username}
-            style={{
-              fontSize: 16,
-              borderBottomWidth: 1,
-              borderColor: '#CDCDCD',
-            }}
-          />
+            style={
+              styles.profileJob
+            }>{`${dataUser.profession},${dataUser.nationality}`}</Text>
         </View>
-        <View style={{paddingVertical: 10}}>
-          <Text
-            style={{
-              opacity: 0.5,
-            }}>
-            Email
-          </Text>
-          <TextInput
-            placeholder="Email"
-            onChangeText={text => handleChangeForm(text, 'email')}
-            defaultValue={data[0]?.email}
-            style={{
-              fontSize: 16,
-              borderBottomWidth: 1,
-              borderColor: '#CDCDCD',
-            }}
-          />
+        <View style={styles.card}>
+          <Text style={styles.cardText}>Card</Text>
+          <TouchableOpacity>
+            <Image source={require('../../assets/add.png')} />
+          </TouchableOpacity>
         </View>
-        <View style={{paddingVertical: 10}}>
-          <Text
-            style={{
-              opacity: 0.5,
-            }}>
-            Phone Number
-          </Text>
-          <TextInput
-            placeholder="Phone Number"
-            onChangeText={text => handleChangeForm(text, 'phoneNumber')}
-            defaultValue={data[0]?.phoneNumber}
-            style={{
-              fontSize: 16,
-              borderBottomWidth: 1,
-              borderColor: '#CDCDCD',
-            }}
-          />
+        <View style={styles.atm}>
+          <Image source={require('../../assets/atm.png')} />
         </View>
-        <View style={{paddingVertical: 10}}>
-          <Text
-            style={{
-              opacity: 0.5,
-            }}>
-            Gender
-          </Text>
-          <TextInput
-            placeholder="accountname"
-            onChangeText={text => handleChangeForm(text, 'gender')}
-            defaultValue={data[0]?.gender}
-            style={{
-              fontSize: 16,
-              borderBottomWidth: 1,
-              borderColor: '#CDCDCD',
-            }}
-          />
+        <View style={styles.bottom}>
+          <View style={styles.edit}>
+            <Image source={require('../../assets/edit.png')} />
+            <TouchableOpacity style={styles.rowEdit} onPress={handleEdit}>
+              <Text style={styles.textEdit}>Edit Profile</Text>
+              <Icon name="chevron-right" size={20} />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.edit}>
+            <Image source={require('../../assets/change.png')} />
+            <TouchableOpacity style={styles.rowEdit} onPress={handleChangePw}>
+              <Text style={styles.textEdit}>Change Password</Text>
+              <Icon name="chevron-right" size={20} />
+            </TouchableOpacity>
+          </View>
         </View>
-        <View style={{paddingVertical: 10}}>
-          <Text
-            style={{
-              opacity: 0.5,
-            }}>
-            Profession
-          </Text>
-          <TextInput
-            placeholder="profession"
-            onChangeText={text => handleChangeForm(text, 'profession')}
-            defaultValue={data[0]?.profession}
-            style={{
-              fontSize: 16,
-              borderBottomWidth: 1,
-              borderColor: '#CDCDCD',
-            }}
-          />
-        </View>
-        <View style={{paddingVertical: 10}}>
-          <Text
-            style={{
-              opacity: 0.5,
-            }}>
-            Nationality
-          </Text>
-          <TextInput
-            placeholder="accountname"
-            onChangeText={text => handleChangeForm(text, 'nationality')}
-            defaultValue={'Indonesia'}
-            style={{
-              fontSize: 16,
-              borderBottomWidth: 1,
-              borderColor: '#CDCDCD',
-            }}
-          />
-        </View>
-        <View style={{paddingVertical: 10}}>
-          <Text
-            style={{
-              opacity: 0.5,
-            }}>
-            Birthday
-          </Text>
-          <TextInput
-            placeholder="BirthDay"
-            defaultValue={data[0]?.dateOfBirth}
-            onChangeText={text => handleChangeForm(Date, 'dateOfBirth')}
-            style={{
-              fontSize: 16,
-              borderBottomWidth: 1,
-              borderColor: '#CDCDCD',
-            }}
-          />
-        </View>
-      </View>
-      <TouchableOpacity
-        onPress={handleUpdate}
-        style={{
-          paddingVertical: 20,
-          margin: 12,
-          backgroundColor: '#3366FF',
-          padding: 10,
-          borderRadius: 15,
-          shadowColor: '#000',
-          shadowOffset: {width: 1, height: 1},
-          shadowOpacity: 0.2,
-          shadowRadius: 5,
-          elevation: 5,
-        }}>
-        <Text style={{textAlign: 'center', color: 'white'}}>Save Change</Text>
-      </TouchableOpacity>
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 }

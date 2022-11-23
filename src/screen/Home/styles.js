@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 16,
   },
-  date: {color: '#FF8900'},
+  date: {color: 'white', textAlign: 'center'},
   header: {color: 'brown'},
   card: {
     width: 160,
@@ -52,10 +52,22 @@ const styles = StyleSheet.create({
   },
   textEvent: {
     fontFamily: 'Poopins-Bold',
-    fontSize: 20,
+    fontSize: 25,
     color: '#373A42',
   },
-  flatlist: {backgroundColor: 'white'},
+
+  active: {
+    alignItems: 'center',
+    borderColor: '#FF8900',
+    borderWidth: 2,
+    padding: 10,
+    borderRadius: 16,
+  },
+  notActive: {
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 16,
+  },
 });
 
 export default styles;

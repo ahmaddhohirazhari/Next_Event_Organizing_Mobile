@@ -1,21 +1,25 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import IconBack from 'react-native-vector-icons/Ionicons';
+import {View, StyleSheet, TouchableOpacity} from 'react-native';
+
 import IconLike from 'react-native-vector-icons/AntDesign';
 
-export default function DetailHeader(props) {
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+export default function HeaderDetail(props) {
   const backScreen = () => {
-    // props.navigation.openDrawer();
-    props.navigation.goBack(null);
+    props.navigation.goBack();
   };
+  console.log(props);
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={backScreen}>
-        <IconBack name="arrow-back" color="white" size={30} />
+        <Icon name="long-arrow-left" size={25} color="white" />
       </TouchableOpacity>
-      <TouchableOpacity onPress={backScreen}>
-        <IconLike name="heart" color="white" size={30} />
-      </TouchableOpacity>
+      <View style={(styles.section, styles.sectionCenter)}>
+        <TouchableOpacity onPress={backScreen}>
+          <IconLike name="heart" color="white" size={30} />
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -24,9 +28,17 @@ const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    paddingVertical: 15,
-    backgroundColor: '#3366FF',
-    opacity: 1,
+    paddingHorizontal: 25,
+    paddingVertical: 20,
+    backgroundColor: 'rgba(51, 102, 255, 1)',
+    alignItems: 'center',
+  },
+  sectionCenter: {
+    alignItems: 'center',
+  },
+  name: {
+    fontFamily: 'Merienda-ExtraBold',
+    fontSize: 20,
+    fontColor: 'white',
   },
 });

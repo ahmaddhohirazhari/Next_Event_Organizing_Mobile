@@ -1,19 +1,19 @@
-/* eslint-disable react-native/no-inline-styles */
-/* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
-import {
-  ScrollView,
-  Text,
-  StyleSheet,
-  Image,
-  View,
-  TouchableOpacity,
-} from 'react-native';
+import {ScrollView, Text, Image, View, ImageBackground} from 'react-native';
 import HeaderDetail from '../../component/Header/detail.js';
 import axios from '../../utils/axios';
+import styles from './styles';
+import Button from '../../component/Button';
+import moment from 'moment';
+import {useDispatch} from 'react-redux';
+import {dataOrder} from '../../stores/actions/dataOrder.js';
+
+import IconLocation from 'react-native-vector-icons/EvilIcons';
+import IconClock from 'react-native-vector-icons/EvilIcons';
 
 export default function Detail(props) {
+  const dispatch = useDispatch();
   const [data, setData] = useState([]);
   const [image, setImage] = useState('');
   const eventId = props.route.params.eventId;
@@ -21,13 +21,29 @@ export default function Detail(props) {
   useEffect(() => {
     getData();
   }, [image]);
-  console.log(data[0]?.image);
+
   const getData = async () => {
     try {
       const result = await axios.get(`/event/${eventId}`);
       console.log(result.data.msg);
       setData(result.data.data);
       setImage(result.data.data[0]?.image);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleBuyTickets = async () => {
+    try {
+      const body = {
+        eventId: eventId,
+        price: data[0]?.price,
+      };
+      await dispatch(dataOrder(body));
+      props.navigation.replace('Order', {
+        eventId: eventId,
+        price: data[0]?.price,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -42,50 +58,41 @@ export default function Detail(props) {
               source={{
                 uri: `https://res.cloudinary.com/dhohircloud/image/upload/v1663957109/${data[0]?.image}`,
               }}
-              style={{height: 400, width: '100%'}}
+              style={styles.image}
             />
           </View>
-          <View
-            style={{
-              marginTop: -30,
-              backgroundColor: 'white',
-              borderTopRightRadius: 30,
-              borderTopLeftRadius: 30,
-              padding: 30,
-            }}>
-            <View style={{margin: 12}}>
-              <Text style={{fontFamily: 'Poppins-Bold'}}>Detail</Text>
+          <View style={styles.container}>
+            <Text style={styles.eventName}>{data[0]?.name}</Text>
+            <View style={styles.location}>
+              <IconLocation name="location" color="red" size={30} />
+              <Text style={styles.textLocation}>{data[0]?.location}</Text>
+            </View>
+            <View style={styles.location}>
+              <IconClock name="clock" color="red" size={30} />
+              <Text style={styles.textLocation}>
+                {moment(data[0]?.dateTimeShow).format('ddd MMM Do , h:mm a')}
+              </Text>
+            </View>
+            <Image source={require('../../assets/attendees.png')} />
+          </View>
+
+          <View style={styles.container_1}>
+            <View style={styles.container_2}>
+              <Text style={styles.title}>Detail</Text>
               <Text>{data[0]?.detail}</Text>
               <Text>Read More</Text>
-              <Text style={{fontFamily: 'Poppins-Bold'}}>Location</Text>
+              <Text style={styles.title}>Location</Text>
               <Text>{data[0]?.location}</Text>
             </View>
-            <TouchableOpacity
-              style={{
-                paddingVertical: 20,
-                margin: 12,
-                backgroundColor: '#3366FF',
-                padding: 10,
-                borderRadius: 15,
-                shadowColor: '#000',
-                shadowOffset: {width: 1, height: 1},
-                shadowOpacity: 0.2,
-                shadowRadius: 5,
-                elevation: 5,
-              }}>
-              <Text
-                style={{textAlign: 'center', color: 'white'}}
-                onPress={() => {
-                  props.navigation.navigate('Order');
-                }}>
-                Buy Tickets
-              </Text>
-            </TouchableOpacity>
+            <ImageBackground
+              source={require('../../assets/location.png')}
+              style={styles.map}
+              resizeMode={'cover'}>
+              <Button text={'Buy Tickets'} onPress={handleBuyTickets} />
+            </ImageBackground>
           </View>
         </ScrollView>
       </ScrollView>
     </>
   );
 }
-
-const style = StyleSheet.create({});

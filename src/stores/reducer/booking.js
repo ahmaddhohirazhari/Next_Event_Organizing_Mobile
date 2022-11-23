@@ -1,100 +1,88 @@
 const initialState = {
-  isError: false,
   isLoading: false,
-  data: {},
+  isError: false,
   msg: '',
+  data: {},
+  bookingSection: {},
 };
-const user = (state = initialState, action) => {
+
+const booking = (state = initialState, action) => {
   switch (action.type) {
-    case 'GET_USER_BY_ID_PENDING': {
+    case 'CREATE_BOOKING_PENDING': {
       return {
         ...state,
         isLoading: true,
+        isError: false,
+        msg: '',
       };
     }
-    case 'GET_USER_BY_ID_FULFILLED': {
+    case 'CREATE_BOOKING_FULFILLED': {
+      console.log(action.payload);
       return {
         ...state,
         isLoading: false,
-        data: action.payload.data.data[0],
+        data: {...action.payload.data.data},
         msg: action.payload.data.msg,
       };
     }
-    case 'GET_USER_BY_ID_REJECTED': {
+    case 'CREATE_BOOKING_REJECTED': {
       return {
         ...state,
-        isError: true,
         isLoading: false,
+        isError: true,
         data: {},
         msg: action.payload.response.data.msg,
       };
     }
-    case 'UPDATE_PROFILE_PENDING': {
+    case 'GET_BOOKING_BY_ID_PENDING': {
       return {
         ...state,
         isLoading: true,
         isError: false,
+        msg: '',
       };
     }
-    case 'UPDATE_PROFILE_FULFILLED': {
+    case 'GET_BOOKING_BY_ID_FULFILLED': {
+      console.log(action.payload);
       return {
         ...state,
         isLoading: false,
-        isError: false,
+        data: {...action.payload.data.data},
         msg: action.payload.data.msg,
       };
     }
-    case 'UPDATE_PROFILE_REJECTED': {
+    case 'GET_BOOKING_BY_ID_REJECTED': {
       return {
         ...state,
         isLoading: false,
         isError: true,
-        msg: action.payload.data.msg,
-      };
-    }
-    case 'UPDATE_IMAGE_PENDING': {
-      return {
-        ...state,
-        isLoading: true,
-        isError: false,
-      };
-    }
-    case 'UPDATE_IMAGE_FULFILLED': {
-      return {
-        ...state,
-        isLoading: false,
-        isError: false,
-        msg: action.payload.data.msg,
-      };
-    }
-    case 'UPDATE_IMAGE_REJECTED': {
-      return {
-        ...state,
-        isLoading: false,
-        isError: true,
+        data: {},
         msg: action.payload.response.data.msg,
       };
     }
-    case 'UPDATE_PASSWORD_PENDING': {
+    case 'GET_BOOKING_SECTION_PENDING': {
       return {
         ...state,
         isLoading: true,
         isError: false,
+        msg: '',
       };
     }
-    case 'UPDATE_PASSWORD_FULFILLED': {
+    case 'GET_BOOKING_SECTION_FULFILLED': {
+      console.log(action.payload);
       return {
         ...state,
         isLoading: false,
-        isError: false,
+        bookingSection: action.payload.data.data,
         msg: action.payload.data.msg,
       };
     }
-    case 'UPDATE_PASSWORD_REJECTED': {
+    case 'GET_BOOKING_SECTION_REJECTED': {
       return {
         ...state,
         isLoading: false,
         isError: true,
+        data: {},
         msg: action.payload.response.data.msg,
       };
     }
@@ -104,4 +92,4 @@ const user = (state = initialState, action) => {
   }
 };
 
-export default user;
+export default booking;

@@ -61,7 +61,7 @@ export default function AppStackNavigator() {
       <Stack.Screen
         name="Detail"
         component={Detail}
-        options={{headerShown: false}}
+        options={{headerShown: false, headerTransparent: true}}
       />
       <Stack.Screen
         name="Order"

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, Image} from 'react-native';
 import {
   DrawerContentScrollView,
   DrawerItem,
@@ -8,10 +8,13 @@ import {
 
 import Icon from 'react-native-vector-icons/Feather';
 import axios from '../../utils/axios';
+import {useSelector} from 'react-redux';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import defaultImage from '../../assets/profileDefault.jpg';
 
 function DrawerContent(props) {
+  const dataUser = useSelector(state => state.user.data);
   const handleLogout = async () => {
     try {
       await axios.post('/auth/logout');
@@ -26,10 +29,20 @@ function DrawerContent(props) {
     <View style={styles.container}>
       <DrawerContentScrollView {...props}>
         <View style={styles.containerProfile}>
-          <View style={styles.avatar} />
+          <Image
+            source={
+              dataUser.image
+                ? {
+                    uri: `https://res.cloudinary.com/dhohircloud/image/upload/v1663957109/${dataUser.image}`,
+                  }
+                : defaultImage
+            }
+            style={styles.avatar}
+          />
+
           <View style={styles.biodata}>
-            <Text style={styles.title}>Anonymous</Text>
-            <Text style={styles.caption}>@bagustea</Text>
+            <Text style={styles.title}>{dataUser.name}s</Text>
+            <Text style={styles.caption}>{dataUser.username}</Text>
           </View>
         </View>
         <DrawerItemList {...props} />

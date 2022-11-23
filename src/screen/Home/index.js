@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useState} from 'react';
 import {
   TextInput,
@@ -5,21 +6,26 @@ import {
   Text,
   ScrollView,
   Image,
-  FlatList,
   Button,
+  TouchableOpacity,
 } from 'react-native';
 import IconSearch from 'react-native-vector-icons/AntDesign';
 import axios from '../../utils/axios';
 import styles from './styles';
-
+import moment from 'moment';
 import CardEvent from '../../component/CardEvent';
 
 export default function Home(props) {
   const [data, setData] = useState([]);
+  const [dateShow, setDateShow] = useState(
+    moment(new Date()).format('YYYY-MM-DD'),
+  );
+  const [listDateShow, setListDateShow] = useState([]);
 
   useEffect(() => {
     getData();
-  }, []);
+    generateDate();
+  }, [dateShow]);
 
   const getData = async () => {
     try {
@@ -31,7 +37,21 @@ export default function Home(props) {
       console.log(error);
     }
   };
+  const generateDate = () => {
+    let listDate = [
+      moment(dateShow).subtract(2, 'days'),
+      moment(dateShow).subtract(1, 'days'),
+      dateShow,
+      moment(dateShow).subtract(-1, 'days'),
+      moment(dateShow).subtract(-2, 'days'),
+    ];
+    setListDateShow(listDate);
+  };
 
+  const selectDate = date => {
+    setDateShow(date);
+  };
+  console.log(listDateShow);
   const handleDetail = eventId => {
     props.navigation.navigate('Detail', {eventId: eventId});
   };
@@ -45,30 +65,23 @@ export default function Home(props) {
           <TextInput
             style={styles.input}
             placeholderTextColor={'rgba(160, 163, 189, 1)'}
-            placeholder="Input FUll Name"
+            placeholder="Event Name"
           />
         </View>
         <View style={styles.sortDateContainer}>
-          <View style={styles.dateContainer}>
-            <Text style={styles.date}>13</Text>
-            <Text style={styles.date}>Mon</Text>
-          </View>
-          <View style={styles.dateContainer}>
-            <Text style={styles.date}>14</Text>
-            <Text style={styles.date}>Tue</Text>
-          </View>
-          <View style={styles.dateContainer}>
-            <Text style={styles.date}>14</Text>
-            <Text style={styles.date}>Tue</Text>
-          </View>
-          <View style={styles.dateContainer}>
-            <Text style={styles.date}>14</Text>
-            <Text style={styles.date}>Tue</Text>
-          </View>
-          <View style={styles.dateContainer}>
-            <Text style={styles.date}>14</Text>
-            <Text style={styles.date}>Tue</Text>
-          </View>
+          {listDateShow.map((item, index) => (
+            <TouchableOpacity
+              style={index === 2 ? styles.active : styles.notActive}
+              key={index}
+              onPress={() => {
+                selectDate(moment(item).format('YYYY-MM-DD'));
+              }}>
+              <View>
+                <Text style={styles.date}>{moment(item).format('DD')}</Text>
+                <Text style={styles.date}>{moment(item).format('ddd')}</Text>
+              </View>
+            </TouchableOpacity>
+          ))}
         </View>
         <View style={styles.view_1}>
           <View style={styles.view_2}>
@@ -76,17 +89,11 @@ export default function Home(props) {
             <Image source={require('../../assets/filter.png')} />
           </View>
         </View>
-        <FlatList
-          horizontal={true}
-          data={data}
-          style={styles.flatlist}
-          renderItem={({item}) => (
-            <View>
-              <CardEvent item={item} handleDetail={handleDetail} />
-            </View>
-          )}
-          keyExtractor={item => item.eventId}
-        />
+
+        <View>
+          <CardEvent data={data} handleDetail={handleDetail} />
+        </View>
+
         <Button title="Detail Screen" onPress={navDetail} />
       </View>
     </ScrollView>

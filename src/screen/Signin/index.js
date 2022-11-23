@@ -1,27 +1,57 @@
 import React, {useState} from 'react';
-import {View, Text, TouchableOpacity, Image} from 'react-native';
+import {View, Text, TouchableOpacity, Image, ToastAndroid} from 'react-native';
 import Logo from '../../assets/logo.png';
 import IconFb from '../../assets/btnFacebook.png';
 import IconGoogle from '../../assets/btnGoogle.png';
 import IconBio from '../../assets/btnBio.png';
-import axios from '../../utils/axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Button from '../../component/Button';
 import Input from '../../component/Input';
 import styles from './styles';
+import {login} from '../../stores/actions/auth';
+import {GetUserById} from '../../stores/actions/user';
+import {useDispatch} from 'react-redux';
 
 export default function Signin(props) {
-  const [form, setForm] = useState({});
+  const [form, setForm] = useState({
+    email: '',
+    password: '',
+  });
+  const dispatch = useDispatch();
+
   const handleLogin = async () => {
     try {
       console.log(form);
-      const result = await axios.post('/auth/login', form);
-      await AsyncStorage.setItem('userId', result.data.data.userId);
-      await AsyncStorage.setItem('token', result.data.data.token);
-      await AsyncStorage.setItem('refreshToken', result.data.data.refreshToken);
-      props.navigation.replace('AppScreen', {screen: 'MenuNavigator'});
+      // const result = await axios.post('auth/login', form);
+      if (form.email === '' || form.password === '') {
+        ToastAndroid.show(
+          'Please fill your email/password ',
+          ToastAndroid.CENTER,
+        );
+      } else {
+        const result = await dispatch(login(form));
+        await AsyncStorage.setItem(
+          'userId',
+          result.action.payload.data.data.userId,
+        );
+        await AsyncStorage.setItem(
+          'token',
+          result.action.payload.data.data.token,
+        );
+        await AsyncStorage.setItem(
+          'refreshToken',
+          result.action.payload.data.data.refreshToken,
+        );
+        await dispatch(GetUserById(result.action.payload.data.data.userId));
+
+        ToastAndroid.show(result.action.payload.data.msg, ToastAndroid.SHORT);
+        props.navigation.replace('AppScreen', {
+          screen: 'Home',
+        });
+      }
     } catch (error) {
-      console.log(error.response.data);
+      console.log(error);
+      ToastAndroid.show(error.response.data.msg, ToastAndroid.SHORT);
     }
   };
 
