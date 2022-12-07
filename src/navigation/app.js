@@ -17,6 +17,8 @@ import Profile from '../screen/Profile';
 import DrawerContent from '../component/DrawerContent';
 import HeaderHome from '../component/Header/home.js';
 import HeaderDefault from '../component/Header/default.js';
+import HeaderDetail from '../component/Header/detail';
+import AllEvent from '../screen/AllEvent';
 
 function MenuNavigator() {
   return (
@@ -61,7 +63,17 @@ export default function AppStackNavigator() {
       <Stack.Screen
         name="Detail"
         component={Detail}
-        options={{headerShown: false, headerTransparent: true}}
+        options={{
+          header: props => <HeaderDetail {...props} />,
+          headerTransparent: true,
+        }}
+      />
+      <Stack.Screen
+        name="AllEvent"
+        component={AllEvent}
+        options={{
+          header: props => <HeaderDefault {...props} />,
+        }}
       />
       <Stack.Screen
         name="Order"

@@ -50,7 +50,7 @@ export default function Detail(props) {
   };
   return (
     <>
-      <HeaderDetail {...props} />
+      {/* <HeaderDetail {...props} /> */}
       <ScrollView>
         <ScrollView>
           <View>

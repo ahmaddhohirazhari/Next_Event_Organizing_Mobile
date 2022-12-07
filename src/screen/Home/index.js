@@ -6,7 +6,6 @@ import {
   Text,
   ScrollView,
   Image,
-  Button,
   TouchableOpacity,
 } from 'react-native';
 import IconSearch from 'react-native-vector-icons/AntDesign';
@@ -56,7 +55,7 @@ export default function Home(props) {
     props.navigation.navigate('Detail', {eventId: eventId});
   };
 
-  const navDetail = () => props.navigation.navigate('Detail');
+  const viewAll = () => props.navigation.navigate('AllEvent');
   return (
     <ScrollView>
       <View style={styles.container}>
@@ -86,15 +85,15 @@ export default function Home(props) {
         <View style={styles.view_1}>
           <View style={styles.view_2}>
             <Text style={styles.textEvent}>Events For You</Text>
-            <Image source={require('../../assets/filter.png')} />
+            <TouchableOpacity onPress={viewAll}>
+              <Image source={require('../../assets/filter.png')} />
+            </TouchableOpacity>
           </View>
         </View>
 
         <View>
           <CardEvent data={data} handleDetail={handleDetail} />
         </View>
-
-        <Button title="Detail Screen" onPress={navDetail} />
       </View>
     </ScrollView>
   );

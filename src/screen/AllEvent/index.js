@@ -3,11 +3,17 @@ import React, {useEffect, useState, useCallback} from 'react';
 import {
   View,
   Text,
-  StyleSheet,
+  Image,
+  TouchableOpacity,
   FlatList,
   ActivityIndicator,
+  TextInput,
 } from 'react-native';
 import axios from '../../utils/axios';
+import styles from './styles';
+import moment from 'moment';
+import IconSearch from 'react-native-vector-icons/AntDesign';
+import defaultImage from '../../assets/event.png';
 
 export default function AllEvent(props) {
   const [data, setData] = useState([]);
@@ -31,7 +37,7 @@ export default function AllEvent(props) {
     try {
       if (page <= totalPage) {
         const result = await axios.get(
-          `product?searchName=&sort=&limit=10&page=${page}&searchDateCreated=`,
+          '/event?page=&searchName=&searchDateShow=&sort=&limit=4',
         );
         if (page === 1) {
           setData(result.data.data);
@@ -73,33 +79,65 @@ export default function AllEvent(props) {
       }
     }
   };
+  const handleDetail = eventId => {
+    props.navigation.navigate('Detail', {eventId: eventId});
+  };
 
   const ListHeader = () => {
     return (
       <>
-        <View style={styles.content}>
+        {/* <View style={styles.content}>
           <View style={styles.search}>
             <Text>Search</Text>
           </View>
           <View style={styles.sort}>
             <Text>Sort</Text>
           </View>
-        </View>
+        </View> */}
       </>
     );
   };
 
   return (
-    <View style={{margin: 10}}>
+    <View style={styles.container}>
+      <View style={styles.search}>
+        <IconSearch name="search1" color="white" size={30} />
+        <TextInput
+          style={styles.input}
+          placeholderTextColor={'rgba(160, 163, 189, 1)'}
+          placeholder="Event Name"
+        />
+      </View>
       <FlatList
         data={data}
-        numColumns="1"
-        keyExtractor={item => item.id}
+        numColumns="2"
+        style={styles.flatlist}
         renderItem={({item}) => (
           <View style={styles.card}>
-            <Text style={{color: 'white'}}>{item.name}</Text>
+            <TouchableOpacity
+              onPress={() => {
+                handleDetail(item.eventId);
+              }}>
+              <Image
+                source={
+                  item.image
+                    ? {
+                        uri: `https://res.cloudinary.com/dhohircloud/image/upload/v1663957109/${item.image}`,
+                      }
+                    : defaultImage
+                }
+                style={styles.image}
+              />
+            </TouchableOpacity>
+            <View style={styles.detail}>
+              <Text style={styles.eventDate}>
+                {moment(item.dateTimeShow).format('ddd MMM Do , h:mm a')}
+              </Text>
+              <Text style={styles.eventName}>{item.name}</Text>
+            </View>
           </View>
         )}
+        // keyExtractor={item => item.eventId}
         onRefresh={handleRefresh}
         refreshing={refresh}
         onEndReached={handleLoadMore}
@@ -118,26 +156,3 @@ export default function AllEvent(props) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  content: {
-    flexDirection: 'row',
-  },
-  search: {
-    flex: 4,
-  },
-  sort: {
-    flex: 2,
-  },
-  card: {
-    paddingHorizontal: 20,
-    paddingVertical: 25,
-    alignItems: 'center',
-    borderRadius: 20,
-    marginBottom: 10,
-    elevation: 2,
-    marginHorizontal: 2,
-    flex: 1,
-    backgroundColor: 'brown',
-  },
-});

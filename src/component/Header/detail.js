@@ -9,7 +9,7 @@ export default function HeaderDetail(props) {
   const backScreen = () => {
     props.navigation.goBack();
   };
-  console.log(props);
+
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={backScreen}>
@@ -30,7 +30,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: 25,
     paddingVertical: 20,
-    backgroundColor: 'rgba(51, 102, 255, 1)',
     alignItems: 'center',
   },
   sectionCenter: {
