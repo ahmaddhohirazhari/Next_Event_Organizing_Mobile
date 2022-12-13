@@ -9,13 +9,22 @@ import {
   ActivityIndicator,
   TextInput,
 } from 'react-native';
-import axios from '../../utils/axios';
+
 import styles from './styles';
 import moment from 'moment';
 import IconSearch from 'react-native-vector-icons/AntDesign';
 import defaultImage from '../../assets/event.png';
+import {getAllEvent} from '../../stores/actions/event';
+import Dropdown from 'react-native-paper-dropdown';
+
+import {useDispatch, useSelector} from 'react-redux';
 
 export default function AllEvent(props) {
+  const dispacth = useDispatch();
+  const dataEvent = useSelector(state => {
+    state.event.data;
+  });
+  console.log(dataEvent);
   const [data, setData] = useState([]);
   const [totalPage, setTotalPage] = useState(10);
   const [page, setPage] = useState(1);
@@ -23,28 +32,41 @@ export default function AllEvent(props) {
   const [loading, setLoading] = useState(false);
   const [last, setLast] = useState(false);
   const [loadMore, setLoadMore] = useState(false);
+  const [search, setSearch] = useState('');
+  const [filter, setFilter] = useState(false);
+  const [showDropDown, setShowDropDown] = useState(false);
+  const filterrList = [
+    {
+      label: 'Newest',
+      value: 'ASC',
+    },
+    {
+      label: 'Lastest',
+      value: 'DSC',
+    },
+  ];
 
   useEffect(() => {
-    getDataProduct();
-  }, [getDataProduct]);
+    getDataEvent();
+  }, [getDataEvent, search]);
 
   useEffect(() => {
-    getDataProduct();
-  }, [getDataProduct, page]);
+    getDataEvent();
+  }, [getDataEvent, page, search]);
+
+  console.log(search);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  const getDataProduct = useCallback(async () => {
+  const getDataEvent = useCallback(async () => {
     try {
       if (page <= totalPage) {
-        const result = await axios.get(
-          '/event?page=&searchName=&searchDateShow=&sort=&limit=4',
-        );
+        const result = await dispacth(getAllEvent(search));
         if (page === 1) {
-          setData(result.data.data);
+          setData(result.action.payload.data.data);
         } else {
-          setData([...data, ...result.data.data]);
+          setData([...data, ...result.action.payload.data.data]);
         }
-        setTotalPage(result.data.pagination.totalPage);
+        setTotalPage(result.action.payload.data.pagination.totalPage);
       } else {
         setLast(true);
       }
@@ -61,10 +83,12 @@ export default function AllEvent(props) {
     if (page !== 1) {
       setRefresh(true);
     } else {
-      getDataProduct();
+      getDataEvent();
     }
   };
-
+  const handleSearch = value => {
+    setSearch(value);
+  };
   const handleLoadMore = () => {
     console.log('GET DATA AGAIN');
     if (!loadMore) {
@@ -100,13 +124,28 @@ export default function AllEvent(props) {
 
   return (
     <View style={styles.container}>
-      <View style={styles.search}>
-        <IconSearch name="search1" color="white" size={30} />
-        <TextInput
-          style={styles.input}
-          placeholderTextColor={'rgba(160, 163, 189, 1)'}
-          placeholder="Event Name"
-        />
+      <View style={styles.container1}>
+        <View style={styles.search}>
+          <IconSearch name="search1" color="white" size={20} />
+          <TextInput
+            style={styles.input}
+            onChangeText={text => handleSearch(text, 'search')}
+            placeholderTextColor={'rgba(160, 163, 189, 1)'}
+            placeholder="Event Name"
+          />
+        </View>
+        <View>
+          <Dropdown
+            label={'Filter'}
+            mode={'outlined'}
+            visible={showDropDown}
+            showDropDown={() => setShowDropDown(true)}
+            onDismiss={() => setShowDropDown(false)}
+            value={filter}
+            setValue={setFilter}
+            list={filterrList}
+          />
+        </View>
       </View>
       <FlatList
         data={data}

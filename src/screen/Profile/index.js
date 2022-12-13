@@ -9,10 +9,10 @@ export default function Profile(props) {
   const dataUser = useSelector(state => state.user.data);
 
   const handleEdit = () => {
-    props.navigation.navigate('Edit Profile');
+    props.navigation.navigate('EditProfile');
   };
   const handleChangePw = () => {
-    props.navigation.navigate('Change Password');
+    props.navigation.navigate('ChangePassword');
   };
   return (
     <>

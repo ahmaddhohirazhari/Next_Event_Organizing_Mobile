@@ -8,19 +8,16 @@ const styles = StyleSheet.create({
     marginHorizontal: 5,
   },
   flatlist: {backgroundColor: 'white'},
-  eventDate: {
-    fontFamily: 'Poppins',
-    fontSize: 20,
-    color: 'white',
-  },
+
   container: {flex: 1, backgroundColor: '#3366FF'},
   search: {
     flexDirection: 'row',
     alignItems: 'center',
     borderWidth: 1,
     borderColor: 'white',
-    margin: 20,
-    paddingHorizontal: 10,
+    margin: 5,
+    width: 300,
+    paddingHorizontal: 5,
     borderRadius: 20,
   },
   eventName: {

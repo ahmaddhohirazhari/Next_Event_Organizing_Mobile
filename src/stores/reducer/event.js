@@ -17,7 +17,7 @@ const event = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        data: action.payload.data.data,
+        data: action.payload.data,
         msg: action.payload.data.msg,
       };
     }
@@ -26,7 +26,7 @@ const event = (state = initialState, action) => {
         ...state,
         isLoading: false,
         isError: true,
-        msg: action.payload.data.msg,
+        // msg: action.payload.data.msg,
       };
     }
     default: {

@@ -11,6 +11,7 @@ import Home from '../screen/Home';
 import Detail from '../screen/Detail';
 import Order from '../screen/Order';
 import Payment from '../screen/Payment';
+import Pay from '../screen/Pay';
 
 import Profile from '../screen/Profile';
 
@@ -19,6 +20,8 @@ import HeaderHome from '../component/Header/home.js';
 import HeaderDefault from '../component/Header/default.js';
 import HeaderDetail from '../component/Header/detail';
 import AllEvent from '../screen/AllEvent';
+import EditProfile from '../screen/EditProfile';
+import Booking from '../screen/Booking';
 
 function MenuNavigator() {
   return (
@@ -76,6 +79,21 @@ export default function AppStackNavigator() {
         }}
       />
       <Stack.Screen
+        name="EditProfile"
+        component={EditProfile}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="Booking"
+        component={Booking}
+        options={{headerShown: false}}
+      />
+      {/* <Stack.Screen
+        name="Change Password"
+        component={ChangePassword}
+        options={{headerShown: false}}
+      /> */}
+      <Stack.Screen
         name="Order"
         component={Order}
         options={{
@@ -87,6 +105,13 @@ export default function AppStackNavigator() {
         component={Payment}
         options={{
           header: props => <HeaderDefault {...props} name="Payment" />,
+        }}
+      />
+      <Stack.Screen
+        name="Pay"
+        component={Pay}
+        options={{
+          header: props => <HeaderDefault {...props} name="Pay" />,
         }}
       />
       {/* EDIT PROFILE */}

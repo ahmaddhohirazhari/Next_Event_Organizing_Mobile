@@ -1,26 +1,35 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
 import {View, Text, ScrollView, Image, TouchableOpacity} from 'react-native';
 import styles from './styles';
 import Icon from 'react-native-vector-icons/dist/FontAwesome';
 import {useDispatch, useSelector} from 'react-redux';
+import axios from '../../utils/axios';
 import {getBookingSection} from '../../stores/actions/booking';
 export default function Order(props) {
   const dispatch = useDispatch();
-  const detailEvent = useSelector(state => state.dataOrder);
-  const dataSection = useSelector(state => state.dataSection);
-  const [data, setData] = useState({});
-  console.log(dataSection);
+  // const detailEvent = useSelector(state => state.dataOrder);
+  const eventId = props.route.params.eventId;
+  console.log(eventId);
+
+  // const dataSection = useSelector(state => state.dataSection);
+  // const [data, setData] = useState({});
+  // console.log(dataSection);
   const [listBooking, setListBooking] = useState([]);
-  console.log(listBooking);
+  // console.log(listBooking);
 
   useEffect(() => {
     getDataBooking();
-  }, []);
+  }, [eventId]);
 
   const getDataBooking = async () => {
     try {
-      const section = await dispatch(getBookingSection(detailEvent.eventId));
-      setData(section.data);
+      // await axios.get(`/booking/bookingSection/${eventId}`);
+      const section = await dispatch(getBookingSection(eventId));
+
+      // setData(result1.data);
+
+      // const dataSection = dispatch(getBookingSection(eventId));
       // const DATADUMMY = {
       //   status: 200,
       //   message: 'Success Get Data Section By Event Id',
@@ -66,7 +75,7 @@ export default function Order(props) {
         {type: 'REG', section: 9},
       ];
       const result = seat.map(item => {
-        let dataTicket = []; // VVIP, VIP, REG
+        let data = []; // VVIP, VIP, REG
         for (let i = 1; i <= 4; i++) {
           // DIGUNAKAN UNTUK MENCARI DATA TIAP BAGIAN
           for (let j = 1; j <= item.section; j++) {
@@ -126,7 +135,7 @@ export default function Order(props) {
     } catch (error) {}
   };
   const checkout = () => {
-    props.navigation.navigate('Payment');
+    props.navigation.navigate('Booking');
   };
 
   return (

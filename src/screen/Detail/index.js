@@ -40,7 +40,7 @@ export default function Detail(props) {
         price: data[0]?.price,
       };
       await dispatch(dataOrder(body));
-      props.navigation.replace('Order', {
+      props.navigation.replace('Booking', {
         eventId: eventId,
         price: data[0]?.price,
       });

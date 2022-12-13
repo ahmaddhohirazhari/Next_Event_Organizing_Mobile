@@ -23,6 +23,6 @@ export const getBookingById = id => {
 export const getBookingSection = id => {
   return {
     type: 'GET_BOOKING_SECTION',
-    payload: axios.patch(`/booking/bookingSection/${id}`),
+    payload: axios.get(`/booking/bookingSection/${id}`),
   };
 };

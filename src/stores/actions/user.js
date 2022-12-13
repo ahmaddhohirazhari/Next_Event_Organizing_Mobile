@@ -10,7 +10,7 @@ export const GetUserById = id => {
 export const UpdateProfile = (id, form) => {
   return {
     type: 'UPDATE_PROFILE',
-    payload: axios.patch(`/user/profile/${id}`, form),
+    payload: axios.patch(`/user/updateUser/${id}`, form),
   };
 };
 

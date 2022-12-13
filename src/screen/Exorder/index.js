@@ -10,23 +10,17 @@ import {
   ScrollView,
   TouchableOpacity,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
-
-import {getBookingSection} from '../../stores/actions/booking';
 
 export default function Order(props) {
-  const dispatch = useDispatch();
-  const event = props.route.params;
+  const event = props.route.params.params;
   const [listBooking, setListBooking] = useState([]);
   const [numReg, setNumReg] = useState(0);
   const [typeReg, setTypeReg] = useState([]);
   const [typeVip, setTypeVip] = useState([]);
   const [typeVvip, setTypeVvip] = useState([]);
-  const [dataBooking, setDataBooking] = useState({});
-
+  // const [type, setType] = useState([]);
   const [numVvip, setNumVvip] = useState(0);
   const [numVip, setNumVip] = useState(0);
-  const eventId = event.eventId;
   const pushOrder = {
     eventId: event.eventId,
     eventName: event.name,
@@ -38,119 +32,150 @@ export default function Order(props) {
   useEffect(() => {
     getDataBooking();
     console.log(event.eventId);
+    // console.log(typeVip);
+    // console.log(typeVvip);
   }, []);
 
   useEffect(() => {
     getDataBooking();
   }, [numVvip, numVip, numReg]);
-  console.log(dataBooking);
-  const getDataBooking = async () => {
-    try {
-      const section = await dispatch(getBookingSection(eventId));
-      setDataBooking(section.action.payload.data);
 
-      // https://www.notion.so/Modul-Booking-293a2b5a8f2b4d09a8e1f25304592c22
-      const DATADUMMY = section.action.payload.data;
-      const seat = [
+  const getDataBooking = () => {
+    // https://www.notion.so/Modul-Booking-293a2b5a8f2b4d09a8e1f25304592c22
+    const DATADUMMY = {
+      status: 200,
+      message: 'Success Get Data Section By Event Id',
+      data: [
         {
-          type: 'VVIP',
-          section: 1,
+          section: 'REG1-1',
+          booked: 30,
+          available: 0,
+          statusFull: true,
         },
-        {type: 'VIP', section: 7},
-        {type: 'REG', section: 9},
-      ];
-      const result = seat.map(item => {
-        let data = []; // VVIP, VIP, REG
-        for (let i = 1; i <= 4; i++) {
-          // DIGUNAKAN UNTUK MENCARI DATA TIAP BAGIAN
-          for (let j = 1; j <= item.section; j++) {
-            // DIGUNAKAN UNTUK MENCARI DATA TIAP SECTION
-            const filterSeat = DATADUMMY.data.filter(
-              dataSeat => dataSeat.section === `${item.type}${i}-${j}`, // VVIP1-1 === VVIP1-1
-            );
-            // filterSeat = [{
-            //   section: 'VVIP1-1',
-            //   booked: 5,
-            //   available: 5,
-            //   statusFull: false,
-            // }]
-            const checkData = data.filter(
-              dataAvailable => dataAvailable.type === item.type,
-            ); // DIGUNAKAN UNTUK MENCARI TAU APAKAH TYPE SUDAH MASUK KE DALAM VARIABEL DATA ?
-            // checkData = []
-            if (checkData.length < 1) {
-              // pengecekan data
-              if (filterSeat.length < 1) {
-                // JIKA DATA BELUM MASUK KEDALAM DATA BOOKING
-                data.push({
-                  type: item.type,
-                  section: `${item.type}${i}-${j}`,
-                  available: item.type.includes('VVIP')
-                    ? 10
-                    : item.type.includes('VIP')
-                    ? 20
-                    : 30,
-                  price: item.type.includes('VVIP')
-                    ? 30
-                    : item.type.includes('VIP')
-                    ? 20
-                    : 10,
-                  image: item.type.includes('VVIP')
-                    ? 'https://res.cloudinary.com/di6rwbzkv/image/upload/v1669092860/Riven/User/vvip_fxampo.png'
-                    : item.type.includes('VIP')
-                    ? 'https://res.cloudinary.com/di6rwbzkv/image/upload/v1669092857/Riven/User/vip_nikrqp.png'
-                    : 'https://res.cloudinary.com/di6rwbzkv/image/upload/v1669092849/Riven/User/regular_ucoa8l.png',
-                  function: item.type.includes('VVIP')
-                    ? numVvip
-                    : item.type.includes('VIP')
-                    ? numVip
-                    : numReg,
-                });
-              }
-              if (filterSeat.length > 0 && !filterSeat[0]?.statusFull) {
-                // JIKA DATA SUDAH MASUK KEDALAM DATA BOOKING
-                data.push({
-                  type: filterSeat[0].section.includes('VVIP')
-                    ? 'VVIP'
-                    : item.type.includes('VIP')
-                    ? 'VIP'
-                    : 'REG',
-                  section: filterSeat[0].section,
-                  available: filterSeat[0].available,
-                  price: filterSeat[0].section.includes('VVIP')
-                    ? 30
-                    : item.type.includes('VIP')
-                    ? 20
-                    : 10,
-                  image: filterSeat[0].section.includes('VVIP')
-                    ? 'https://res.cloudinary.com/di6rwbzkv/image/upload/v1669092860/Riven/User/vvip_fxampo.png'
-                    : item.type.includes('VIP')
-                    ? 'https://res.cloudinary.com/di6rwbzkv/image/upload/v1669092857/Riven/User/vip_nikrqp.png'
-                    : 'https://res.cloudinary.com/di6rwbzkv/image/upload/v1669092849/Riven/User/regular_ucoa8l.png',
-                  function: filterSeat[0].section.includes('VVIP')
-                    ? numVvip
-                    : item.type.includes('VIP')
-                    ? numVip
-                    : numReg,
-                });
-              }
+        {
+          section: 'REG1-2',
+          booked: 15,
+          available: 15,
+          statusFull: false,
+        },
+        {
+          section: 'REG1-3',
+          booked: 0,
+          available: 30,
+          statusFull: false,
+        },
+        {
+          section: 'REG1-4',
+          booked: 30,
+          available: 0,
+          statusFull: true,
+        },
+        {
+          section: 'VVIP1-1',
+          booked: 5,
+          available: 5,
+          statusFull: false,
+        },
+      ],
+    };
+    const seat = [
+      {
+        type: 'VVIP',
+        section: 1,
+      },
+      {type: 'VIP', section: 7},
+      {type: 'REG', section: 9},
+    ];
+    const result = seat.map(item => {
+      let data = []; // VVIP, VIP, REG
+      for (let i = 1; i <= 4; i++) {
+        // DIGUNAKAN UNTUK MENCARI DATA TIAP BAGIAN
+        for (let j = 1; j <= item.section; j++) {
+          // DIGUNAKAN UNTUK MENCARI DATA TIAP SECTION
+          const filterSeat = DATADUMMY.data.filter(
+            dataSeat => dataSeat.section === `${item.type}${i}-${j}`, // VVIP1-1 === VVIP1-1
+          );
+          // filterSeat = [{
+          //   section: 'VVIP1-1',
+          //   booked: 5,
+          //   available: 5,
+          //   statusFull: false,
+          // }]
+          const checkData = data.filter(
+            dataAvailable => dataAvailable.type === item.type,
+          ); // DIGUNAKAN UNTUK MENCARI TAU APAKAH TYPE SUDAH MASUK KE DALAM VARIABEL DATA ?
+          // checkData = []
+          if (checkData.length < 1) {
+            // pengecekan data
+            if (filterSeat.length < 1) {
+              // JIKA DATA BELUM MASUK KEDALAM DATA BOOKING
+              data.push({
+                type: item.type,
+                section: `${item.type}${i}-${j}`,
+                available: item.type.includes('VVIP')
+                  ? 10
+                  : item.type.includes('VIP')
+                  ? 20
+                  : 30,
+                price: item.type.includes('VVIP')
+                  ? 30
+                  : item.type.includes('VIP')
+                  ? 20
+                  : 10,
+                image: item.type.includes('VVIP')
+                  ? 'https://res.cloudinary.com/di6rwbzkv/image/upload/v1669092860/Riven/User/vvip_fxampo.png'
+                  : item.type.includes('VIP')
+                  ? 'https://res.cloudinary.com/di6rwbzkv/image/upload/v1669092857/Riven/User/vip_nikrqp.png'
+                  : 'https://res.cloudinary.com/di6rwbzkv/image/upload/v1669092849/Riven/User/regular_ucoa8l.png',
+                function: item.type.includes('VVIP')
+                  ? numVvip
+                  : item.type.includes('VIP')
+                  ? numVip
+                  : numReg,
+              });
+            }
+            if (filterSeat.length > 0 && !filterSeat[0]?.statusFull) {
+              // JIKA DATA SUDAH MASUK KEDALAM DATA BOOKING
+              data.push({
+                type: filterSeat[0].section.includes('VVIP')
+                  ? 'VVIP'
+                  : item.type.includes('VIP')
+                  ? 'VIP'
+                  : 'REG',
+                section: filterSeat[0].section,
+                available: filterSeat[0].available,
+                price: filterSeat[0].section.includes('VVIP')
+                  ? 30
+                  : item.type.includes('VIP')
+                  ? 20
+                  : 10,
+                image: filterSeat[0].section.includes('VVIP')
+                  ? 'https://res.cloudinary.com/di6rwbzkv/image/upload/v1669092860/Riven/User/vvip_fxampo.png'
+                  : item.type.includes('VIP')
+                  ? 'https://res.cloudinary.com/di6rwbzkv/image/upload/v1669092857/Riven/User/vip_nikrqp.png'
+                  : 'https://res.cloudinary.com/di6rwbzkv/image/upload/v1669092849/Riven/User/regular_ucoa8l.png',
+                function: filterSeat[0].section.includes('VVIP')
+                  ? numVvip
+                  : item.type.includes('VIP')
+                  ? numVip
+                  : numReg,
+              });
             }
           }
         }
-        return data;
-      });
-      // result = [[{type: "REG",section: "REG1-1", available: 30}], [{type: "VIP",section: "VIP1-1", available: 20}], [{type: "VVIP",section: "VVIP1-1", available: 5}]]
-      const newResult = result.map(item => item[0]);
-      // newResult = [
-      //   {type: 'REG', section: 'REG1-1', available: 30,price:30},
-      //   {type: 'VIP', section: 'VIP1-1', available: 20},
-      //   {type: 'VVIP', section: 'VVIP1-1', available: 5},
-      // ];
-      setListBooking(newResult);
-    } catch (error) {
-      console.log(error);
-    }
+      }
+      return data;
+    });
+    // result = [[{type: "REG",section: "REG1-1", available: 30}], [{type: "VIP",section: "VIP1-1", available: 20}], [{type: "VVIP",section: "VVIP1-1", available: 5}]]
+    const newResult = result.map(item => item[0]);
+    // newResult = [
+    //   {type: 'REG', section: 'REG1-1', available: 30,price:30},
+    //   {type: 'VIP', section: 'VIP1-1', available: 20},
+    //   {type: 'VVIP', section: 'VVIP1-1', available: 5},
+    // ];
+    setListBooking(newResult);
   };
+
   // const handleplus = (type, stock) => {
   //   setNum(num + 1);
   //   if (type === 'VVIP') {
@@ -176,7 +201,7 @@ export default function Order(props) {
         <View style={{backgroundColor: '#3366FF', height: 70}} />
         <ScrollView style={style.mainContainer}>
           <View style={{alignItems: 'center', marginTop: 30}}>
-            <Image source={require('../../assets/seat.png')} />
+            <Image source={require('../../assets/img/seat.png')} />
           </View>
           <View style={{marginVertical: 30}}>
             <Text style={style.p}>Tickets</Text>
@@ -255,7 +280,7 @@ export default function Order(props) {
                             setNumReg(0);
                           }
                         }}>
-                        <Image source={require('../../assets/minus.png')} />
+                        <Image source={require('../../assets/img/minus.png')} />
                       </TouchableOpacity>
                       <Text style={style.p}>{item.function}</Text>
                       <TouchableOpacity
@@ -279,7 +304,7 @@ export default function Order(props) {
                             setNumReg(item.available);
                           }
                         }}>
-                        <Image source={require('../../assets/plus.png')} />
+                        <Image source={require('../../assets/img/plus.png')} />
                       </TouchableOpacity>
                     </View>
                   </View>
